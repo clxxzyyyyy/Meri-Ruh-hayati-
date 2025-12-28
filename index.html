@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Ruh Hayati 🎀</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary-pink: #ff85a2;
+            --heart-blue: #60a5fa;
+            --glow-green: #22c55e;
+        }
+
+        * { box-sizing: border-box; scroll-behavior: smooth; }
+
+        body {
+            margin: 0;
+            font-family: 'Poppins', sans-serif;
+            color: white;
+            background-color: #000;
+            overflow-x: hidden;
+        }
+
+        /* --- 🤍 & 💙 FALLING HEARTS --- */
+        #snow-container {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 100; 
+        }
+
+        .snowflake {
+            position: absolute;
+            top: -20px;
+            user-select: none;
+            animation: fall linear forwards;
+        }
+
+        @keyframes fall {
+            to { transform: translateY(105vh) rotate(360deg); }
+        }
+
+        /* --- PARALLAX BACKGROUND --- */
+        .section {
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 40px 20px;
+            overflow: hidden;
+        }
+
+        .bg-img {
+            position: absolute;
+            top: -10%; left: 0; width: 100%; height: 120%; 
+            background-size: cover;
+            background-position: center;
+            z-index: -1;
+            will-change: transform;
+            transition: filter 0.5s ease;
+        }
+
+        /* --- DYNAMIC CARDS --- */
+        .card {
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 25px;
+            padding: 30px;
+            max-width: 380px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.9);
+            z-index: 10;
+            transition: all 0.5s ease;
+        }
+
+        /* CARD TRANSPARENCY ON INTERACTION */
+        .card:has(button:hover), .card:has(.task:hover), .card:has(input:focus) {
+            background: rgba(0, 0, 0, 0.3); /* Makes background image visible */
+            backdrop-filter: blur(2px);
+        }
+
+        h1, h2 { font-family: 'Dancing Script', cursive; color: var(--primary-pink); margin: 10px 0; }
+
+        /* GREEN GLOW BUTTONS */
+        button, .task {
+            display: block; width: 100%; padding: 14px; margin: 10px 0;
+            background: rgba(255,255,255,0.05); border: 1px solid var(--heart-blue);
+            color: white; border-radius: 15px; cursor: pointer; transition: 0.4s;
+            font-family: 'Poppins', sans-serif; font-size: 14px;
+        }
+
+        button:hover, .task:hover {
+            background: var(--glow-green) !important;
+            color: black;
+            font-weight: bold;
+            box-shadow: 0 0 20px var(--glow-green);
+            border-color: var(--glow-green);
+            transform: scale(1.02);
+        }
+
+        .task.done { border-color: var(--glow-green); color: var(--glow-green); }
+
+        textarea {
+            width: 100%; background: rgba(255,255,255,0.1); border: 1px solid var(--heart-blue);
+            border-radius: 15px; color: white; padding: 10px; margin-top: 10px;
+        }
+
+        #lock-screen { 
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            background: #000; z-index: 10000; display: flex; flex-direction: column; 
+            justify-content: center; align-items: center; 
+        }
+
+        #main-content { display: none; }
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+
+<div id="snow-container"></div>
+<audio id="player" loop><source src="music.mp3" type="audio/mpeg"></audio>
+
+<div id="lock-screen">
+    <h2 style="color: var(--heart-blue);">Patience, Ruh Hayati... 🌙</h2>
+    <div id="timer" style="font-size: 3.5rem; color: #fff; font-weight: bold;">00:00:00</div>
+    <p style="opacity: 0.6;">Unlocking the world on 29/12</p>
+</div>
+
+<div id="main-content">
+    
+    <section class="section">
+        <div class="bg-img" style="background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('images/photo1.jpg');"></div>
+        <div class="card">
+            <h1>My Ruh Hayati 🎀</h1>
+            <p>Welcome to your birthday sanctuary. Before we begin, let the music find your soul.</p>
+            <button id="enter-btn" onclick="startApp()">Play Music & Enter 💫</button>
+            <p id="music-wait" class="hidden" style="font-size: 12px; color: var(--heart-blue);">Let the song play for a moment... (30s)</p>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="bg-img" style="background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('images/photo2.jpg');"></div>
+        <div class="card">
+            <h2>Your Journey Tasks 💌</h2>
+            <div id="task-list">
+                <div class="task" onclick="completeTask(this)">✨ Close your eyes and whisper a wish</div>
+                <div class="task" onclick="completeTask(this)">😂 Find a photo of us that makes you laugh</div>
+                <div class="task" onclick="completeTask(this)">🌙 Drink a glass of water (Stay hydrated!)</div>
+                <div class="task" onclick="completeTask(this)">📸 Take a selfie with your favorite gift</div>
+                <div class="task" onclick="completeTask(this)">🍰 Record a 5-second video of your smile</div>
+            </div>
+            <button id="task-next" class="hidden" onclick="scrollNext()">Missions Complete →</button>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="bg-img" style="background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('images/photo3.jpg');"></div>
+        <div class="card">
+            <div id="quiz-ui">
+                <p id="quiz-progress" style="color:var(--heart-blue); font-size:12px; font-weight:bold;">MEMORIES STAGE 1 / 20</p>
+                <h2 id="quiz-question" style="font-size: 22px;">Find my heart...</h2>
+                <div id="quiz-options"></div>
+            </div>
+            <div id="quiz-final" class="hidden">
+                <h2>The Heart is Found. 💗</h2>
+                <p>Now, tell me one thing you love about us...</p>
+                <textarea id="memory-input" rows="3" placeholder="Write here..."></textarea>
+                <button class="nav-btn" onclick="checkMemory()">Unlock Final Surprise 🎂</button>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="bg-img" style="background-image: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('images/photo4.jpg');"></div>
+        <div class="card">
+            <h1>Happy Birthday! 🎂</h1>
+            <p>"I wanna be yours..."</p>
+            <h2 style="font-size: 28px; color: var(--glow-green);">I Love You Forever 💖</h2>
+            <p style="font-size: 13px;">You've completed the journey. May your year be as beautiful as your soul.</p>
+        </div>
+    </section>
+</div>
+
+<script>
+    // --- 1. FALLING EFFECTS ---
+    function createHeart() {
+        const h = document.createElement('div');
+        h.classList.add('snowflake');
+        h.innerText = ['🤍', '💙', '✨'][Math.floor(Math.random()*3)];
+        h.style.left = Math.random() * 100 + 'vw';
+        h.style.animationDuration = Math.random() * 3 + 4 + 's';
+        h.style.fontSize = Math.random() * 20 + 10 + 'px';
+        document.getElementById('snow-container').appendChild(h);
+        setTimeout(() => h.remove(), 6000);
+    }
+    setInterval(createHeart, 250);
+
+    // --- 2. PARALLAX ---
+    window.addEventListener('scroll', () => {
+        const scrolled = window.pageYOffset;
+        document.querySelectorAll('.bg-img').forEach((bg, i) => {
+            bg.style.transform = `translateY(${(scrolled - (i * window.innerHeight)) * 0.4}px)`;
+        });
+    });
+
+    // --- 3. TIMER (Dec 29) ---
+    const targetDate = new Date('December 29, 2025 00:00:00').getTime();
+    function updateTimer() {
+        const diff = targetDate - new Date().getTime();
+        if (diff <= 0) {
+            document.getElementById('lock-screen').style.display = 'none';
+            document.getElementById('main-content').style.display = 'block';
+        } else {
+            const h = Math.floor((diff % 86400000) / 3600000), m = Math.floor((diff % 3600000) / 60000), s = Math.floor((diff % 60000) / 1000);
+            document.getElementById('timer').innerText = `${h.toString().padStart(2,'0')}:${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
+        }
+    }
+    setInterval(updateTimer, 1000); updateTimer();
+
+    // --- 4. APP LOGIC ---
+    let musicStartTime = 0;
+    function startApp() {
+        const player = document.getElementById('player');
+        player.play();
+        musicStartTime = Date.now();
+        document.getElementById('music-wait').classList.remove('hidden');
+        document.getElementById('enter-btn').innerText = "Song Playing... 🎵";
+        
+        // Forced wait of 15 seconds before they can scroll
+        setTimeout(() => {
+            scrollNext();
+        }, 15000); 
+    }
+
+    let tasksDone = 0;
+    function completeTask(el) {
+        if(!el.classList.contains('done')) {
+            el.classList.add('done');
+            tasksDone++;
+            if(tasksDone >= 5) document.getElementById('task-next').classList.remove('hidden');
+        }
+    }
+
+    const questions = [
+        { q: "Where is my heart?", a: ["You stole it", "In your pocket", "You already have it"] },
+        { q: "Who is my peace?", a: ["Only you 🎀", "Your smile", "Always you"] },
+        { q: "Where do I belong?", a: ["By your side", "In your arms", "Wherever you are"] },
+        { q: "What's my favorite sound?", a: ["Your laugh", "Your voice", "You calling me"] },
+        { q: "Who owns my thoughts?", a: ["You do", "You, 100%", "Always you"] },
+        { q: "What's the best view?", a: ["Your face", "You laughing", "Us together"] },
+        { q: "Where is my home?", a: ["Wherever you are", "In your heart", "Next to you"] },
+        { q: "What's my lucky charm?", a: ["Your hug", "Your existance", "Your text"] },
+        { q: "Who is my Ruh Hayati?", a: ["You are", "My birthday girl", "Definitely you"] },
+        { q: "What's my secret?", a: ["I love you more", "I'm always yours", "I'm obsessed with you"] },
+        { q: "Who makes me glow?", a: ["You do", "Your love", "Our bond"] },
+        { q: "What's my dream?", a: ["You and me", "Waking up to you", "Our future"] },
+        { q: "Where is the love?", a: ["In every word I say", "Deep in my heart", "All around you"] },
+        { q: "Who deserves the world?", a: ["You do 🌎", "The birthday queen", "Only you"] },
+        { q: "What's the best habit?", a: ["Loving you", "Thinking of you", "Caring for you"] },
+        { q: "Who is my world?", a: ["You", "You, always", "Everything is you"] },
+        { q: "What's my wish?", a: ["Your happiness", "You by my side", "Us, forever"] },
+        { q: "Who has my soul?", a: ["You kept it", "You locked it", "It's yours"] },
+        { q: "Are you ready?", a: ["For the surprise?", "To see my wish?", "Yes!"] },
+        { q: "Will you be mine?", a: ["Always", "Forever", "I Wanna Be Yours"] }
+    ];
+
+    let current = 0;
+    function loadQuiz() {
+        if (current < questions.length) {
+            document.getElementById('quiz-progress').innerText = `MEMORIES STAGE ${current + 1} / 20`;
+            document.getElementById('quiz-question').innerText = questions[current].q;
+            const opt = document.getElementById('quiz-options');
+            opt.innerHTML = '';
+            questions[current].a.forEach(text => {
+                const b = document.createElement('button');
+                b.innerText = text;
+                b.onclick = () => { current++; loadQuiz(); };
+                opt.appendChild(b);
+            });
+        } else {
+            document.getElementById('quiz-ui').classList.add('hidden');
+            document.getElementById('quiz-final').classList.remove('hidden');
+        }
+    }
+
+    function checkMemory() {
+        if(document.getElementById('memory-input').value.length > 5) {
+            scrollNext();
+        } else {
+            alert("Please write a bit more... 💗");
+        }
+    }
+
+    function scrollNext() { window.scrollBy({ top: window.innerHeight, behavior: 'smooth' }); loadQuiz(); }
+</script>
+</body>
+</html>
